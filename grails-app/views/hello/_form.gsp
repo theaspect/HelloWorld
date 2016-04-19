@@ -8,6 +8,5 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:textField name="title" required="" value="${helloInstance?.title}"/>
-
 </div>
 
