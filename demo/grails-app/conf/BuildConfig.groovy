@@ -23,7 +23,7 @@ grails.project.fork = [
 
 grails.project.dependency.resolver = "maven" // or ivy
 
-grails.plugin.location.shiro = "../bower-grails-asset-pipeline"
+grails.plugin.location.'bower-asset-pipeline' = "../bower-grails-asset-pipeline"
 
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
