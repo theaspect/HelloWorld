@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package asset.pipeline.coffee
+package asset.pipeline.bower
 
 import asset.pipeline.AssetFile
 import org.mozilla.javascript.Context
@@ -22,21 +22,21 @@ import org.mozilla.javascript.Scriptable
 import asset.pipeline.AbstractProcessor
 import asset.pipeline.AssetCompiler
 
-// CoffeeScript engine will attempt to use Node.JS coffee if it is available on
-// the system path. If not, it uses Mozilla Rhino to compile the CoffeeScript
+// BowerScript engine will attempt to use Node.JS bower if it is available on
+// the system path. If not, it uses Mozilla Rhino to compile the BowerScript
 // template using the javascript in-browser compiler.
-class CoffeeScriptProcessor extends AbstractProcessor {
+class BowerScriptProcessor extends AbstractProcessor {
 
 	static Boolean NODE_SUPPORTED
 	Scriptable globalScope
 	ClassLoader classLoader
 
-	CoffeeScriptProcessor(AssetCompiler precompiler) {
+	BowerScriptProcessor(AssetCompiler precompiler) {
 		super(precompiler)
 		if(!isNodeSupported()) {
 			try {
 				classLoader = getClass().getClassLoader()
-				def coffeeScriptJsResource = classLoader.getResource('asset/pipeline/coffee/coffee-script-1.7.1.js')
+				def coffeeScriptJsResource = classLoader.getResource('asset/pipeline/bower/bower-script-1.7.1.js')
 
 
 
@@ -46,7 +46,7 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 				globalScope = cx.initStandardObjects()
 				cx.evaluateString globalScope, coffeeScriptJsResource.getText("UTF-8"), coffeeScriptJsResource.file, 1, null
 			} catch(Exception e) {
-				throw new Exception("CoffeeScript Engine initialization failed.", e)
+				throw new Exception("BowerScript Engine initialization failed.", e)
 			} finally {
 				try {
 					Context.exit()
@@ -58,7 +58,7 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 
 
 	/**
-	* Processes an input string from a given AssetFile implementation of coffeescript and converts it to javascript
+	* Processes an input string from a given AssetFile implementation of bowerscript and converts it to javascript
 	* @param   input String input coffee script text to be converted to javascript
 	* @param   AssetFile instance of the asset file from which this file came from. Not actually used currently for this implementation.
 	* @return  String of compiled javascript
@@ -72,12 +72,12 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 				def cx = Context.enter()
 				def compileScope = cx.newObject(globalScope)
 				compileScope.setParentScope(globalScope)
-				compileScope.put("coffeeScriptSrc", compileScope, input)
-				def result = cx.evaluateString(compileScope, "CoffeeScript.compile(coffeeScriptSrc)", "CoffeeScript compile command", 0, null)
+				compileScope.put("bowerScriptSrc", compileScope, input)
+				def result = cx.evaluateString(compileScope, "BowerScript.compile(bowerScriptSrc)", "BowerScript compile command", 0, null)
 				return result
 			} catch(Exception e) {
 				throw new Exception("""
-				CoffeeScript Engine compilation of coffeescript to javascript failed.
+				BowerScript Engine compilation of coffeescript to javascript failed.
 				$e
 				""")
 			} finally {
@@ -87,7 +87,7 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 	}
 
 	/**
-	 * Processes an input string of coffeescript using node.js (Don't use directly)
+	 * Processes an input string of bowerscript using node.js (Don't use directly)
 	* @param   input String input coffee script text to be converted to javascript
 	* @param   AssetFile instance of the asset file from which this file came from. Not actually used currently for this implementation.
 	* @return  String of compiled javascript
@@ -98,7 +98,7 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 		def err = new StringBuilder()
 
 		try {
-			def command = "${ isWindows() ? 'cmd /c ' : '' }coffee -csp"
+			def command = "${ isWindows() ? 'cmd /c ' : '' }bower -csp"
 			nodeProcess = command.execute()
 			nodeProcess.getOutputStream().write(input.bytes)
 			nodeProcess.getOutputStream().flush()
@@ -110,7 +110,7 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 			return output.toString()
 		} catch(Exception e) {
 			throw new Exception("""
-			Node.js CoffeeScript Engine compilation of coffeescript to javascript failed.
+			Node.js BowerScript Engine compilation of bowerscript to javascript failed.
 			$e
 			""")
 		}
@@ -137,7 +137,7 @@ class CoffeeScriptProcessor extends AbstractProcessor {
 			def err = new StringBuilder()
 
 			try {
-				def command = "${ isWindows() ? 'cmd /c ' : '' }coffee -v"
+				def command = "${ isWindows() ? 'cmd /c ' : '' }bower -v"
 				nodeProcess = command.execute()
 				nodeProcess.waitForProcessOutput(output, err)
 				if(err) {

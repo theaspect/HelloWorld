@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bower-grails-asset-pipeline/bower-grails-asset-pipeline.iml" filepath="$PROJECT_DIR$/bower-grails-asset-pipeline/bower-grails-asset-pipeline.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/demo-grailsPlugins.iml" filepath="$PROJECT_DIR$/demo/demo-grailsPlugins.iml" />
     </modules>
   </component>
 </project>

@@ -14,36 +14,35 @@
 * limitations under the License.
 */
 
-package asset.pipeline.coffee
+package asset.pipeline.bower
 
 import spock.lang.Specification
 
 /**
-* @author David Estes
-*/
-class CoffeeScriptProcessorSpec extends Specification {
-	void "should compile coffeescript into js using rhino"() {
+**/
+class BowerScriptProcessorSpec extends Specification {
+	void "should compile bowerscript into js using rhino"() {
 		given:
 			def coffeeScript = '''
 				log = ->
 					console.log "hello world"
 			'''
-			CoffeeScriptProcessor.NODE_SUPPORTED=false
-			def processor = new CoffeeScriptProcessor()
+			BowerScriptProcessor.NODE_SUPPORTED=false
+			def processor = new BowerScriptProcessor()
 		when:
 			def output = processor.process(coffeeScript, null)
 		then:
 			output.contains('console.log("hello world");')
 	}
 
-	void "should compile coffeescript into js using node"() {
+	void "should compile bowerscript into js using node"() {
 		given:
 			def coffeeScript = '''
 			log = ->
 			console.log "hello world"
 			'''
-			CoffeeScriptProcessor.NODE_SUPPORTED=true
-			def processor = new CoffeeScriptProcessor()
+			BowerScriptProcessor.NODE_SUPPORTED=true
+			def processor = new BowerScriptProcessor()
 		when:
 			def output = processor.process(coffeeScript, null)
 		then:

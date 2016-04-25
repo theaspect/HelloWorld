@@ -14,17 +14,16 @@
 * limitations under the License.
 */
 
-package asset.pipeline.coffee
+package asset.pipeline.bower
 
 import spock.lang.Specification
 
 /**
-* @author David Estes
-*/
-class CoffeeAssetFileSpec extends Specification {
+**/
+class BowerAssetFileSpec extends Specification {
 	void "should match directive patterns"() {
 		given:
-		def jsFile = new CoffeeAssetFile()
+		def jsFile = new BowerAssetFile()
 		when:
 		def matches = (line =~ jsFile.directivePattern)?.collect{ it[1].trim()} ?: []
 		def match = matches.size > 0 ? matches[0] : null

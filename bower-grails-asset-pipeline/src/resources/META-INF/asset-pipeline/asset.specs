@@ -1,1 +1,1 @@
-asset.pipeline.coffee.CoffeeAssetFile
+asset.pipeline.bower.BowerAssetFile

@@ -14,22 +14,20 @@
 * limitations under the License.
 */
 
-package asset.pipeline.coffee
+package asset.pipeline.bower
 
-import asset.pipeline.CacheManager
 import asset.pipeline.AbstractAssetFile
-import asset.pipeline.AssetHelper
+
 import java.util.regex.Pattern
 
 /**
-* Specification for the CofffeeScript file extension which compiles into javascript
-* @author David Estes
+* Specification for the BowerScript file extension which compiles into javascript
 */
-class CoffeeAssetFile extends AbstractAssetFile {
+class BowerAssetFile extends AbstractAssetFile {
 	static final contentType = ['application/javascript','application/x-javascript','text/javascript']
-	static extensions = ['coffee', 'js.coffee']
+	static extensions = ['bower', 'js.bower']
 	static final String compiledExtension = 'js'
-	static processors = [CoffeeScriptProcessor]
+	static processors = [asset.pipeline.bower.BowerScriptProcessor]
 	Pattern directivePattern = ~/(?m)#=(.*)/
 
 }
