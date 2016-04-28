@@ -11,7 +11,7 @@ grails.project.dependency.resolution = {
 	}
 
 	dependencies {
-		compile 'com.bertramlabs.plugins:coffee-asset-pipeline:2.7.2'
+
 	}
 	plugins {
 

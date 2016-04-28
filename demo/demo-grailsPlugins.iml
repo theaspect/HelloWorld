@@ -15,7 +15,9 @@
     </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
-        <datasource-map />
+        <datasource-map>
+          <unit-entry name="Gorm" />
+        </datasource-map>
         <naming-strategy-map />
       </configuration>
     </facet>
@@ -224,7 +226,10 @@
           <root url="jar://D:/grails-2.4.5/lib/org.apache.ant/ant-trax/jars/ant-trax-1.7.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/asset-pipeline-core-2.7.2-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ideaLibSources/groovy-all-2.3.11-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

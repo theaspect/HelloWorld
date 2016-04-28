@@ -38,6 +38,4 @@ class BowerAssetFileSpec extends Specification {
 		'#= require_tree .' | 'require_tree .'
 	}
 
-
-
 }

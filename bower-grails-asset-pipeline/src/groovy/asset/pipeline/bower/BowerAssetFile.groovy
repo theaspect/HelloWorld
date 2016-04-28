@@ -21,13 +21,12 @@ import asset.pipeline.AbstractAssetFile
 import java.util.regex.Pattern
 
 /**
-* Specification for the BowerScript file extension which compiles into javascript
+* Specification for the Bower file extension which compiles into javascript
 */
 class BowerAssetFile extends AbstractAssetFile {
 	static final contentType = ['application/javascript','application/x-javascript','text/javascript']
-	static extensions = ['bower', 'js.bower']
+	static extensions = ['bower']
 	static final String compiledExtension = 'js'
-	static processors = [asset.pipeline.bower.BowerScriptProcessor]
+	static processors = [BowerScriptProcessor]
 	Pattern directivePattern = ~/(?m)#=(.*)/
-
 }

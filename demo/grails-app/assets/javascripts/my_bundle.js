@@ -1,1 +1,3 @@
-//= require_tree my_bundle
+//= require my_bundle/angular.js
+//= require angular.bower
+//= require_self

@@ -23,28 +23,29 @@ import spock.lang.Specification
 class BowerScriptProcessorSpec extends Specification {
 	void "should compile bowerscript into js using rhino"() {
 		given:
-			def coffeeScript = '''
+			def bowerScript = '''
 				log = ->
 					console.log "hello world"
 			'''
 			BowerScriptProcessor.NODE_SUPPORTED=false
 			def processor = new BowerScriptProcessor()
 		when:
-			def output = processor.process(coffeeScript, null)
+			def output = processor.process(bowerScript, null)
 		then:
 			output.contains('console.log("hello world");')
 	}
 
 	void "should compile bowerscript into js using node"() {
 		given:
-			def coffeeScript = '''
+
+			def bowerScript = '''
 			log = ->
 			console.log "hello world"
 			'''
 			BowerScriptProcessor.NODE_SUPPORTED=true
 			def processor = new BowerScriptProcessor()
 		when:
-			def output = processor.process(coffeeScript, null)
+			def output = processor.process(bowerScript, null)
 		then:
 			output.contains('console.log("hello world");')
 	}
