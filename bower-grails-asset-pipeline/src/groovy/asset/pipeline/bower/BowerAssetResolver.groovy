@@ -1,42 +1,19 @@
 package asset.pipeline.bower
 
 import asset.pipeline.AssetFile
-import asset.pipeline.fs.AbstractAssetResolver
+import asset.pipeline.fs.AssetResolver
 import org.springframework.stereotype.Component
 
 @Component
-class BowerAssetResolver extends AbstractAssetResolver<Object> {
-    BowerAssetResolver() {
-        super("SomeUnusedName")
-    }
+class BowerAssetResolver implements AssetResolver {
 
     @Override
-    protected String relativePathToResolver(Object file, String scanDirectoryPath) {
-        return null
-    }
-
-    @Override
-    protected Object getRelativeFile(String relativePath, String name) {
-        return null
-    }
-
-    @Override
-    protected Closure<InputStream> createInputStreamClosure(Object file) {
-        return null
-    }
-
-    @Override
-    protected String getFileName(Object file) {
-        return null
+    String getName() {
+        return "BowerAssetResolver"
     }
 
     /**
      * Called from asset.pipeline.AssetHelper#fileForUri(java.lang.String, java.lang.String, java.lang.String, asset.pipeline.AssetFile)
-     * @param relativePath
-     * @param contentType
-     * @param extension
-     * @param baseFile
-     * @return
      */
     @Override
     AssetFile getAsset(String relativePath, String contentType, String extension, AssetFile baseFile) {
