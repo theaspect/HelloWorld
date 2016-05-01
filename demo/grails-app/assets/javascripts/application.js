@@ -5,6 +5,7 @@
 // You're free to add application-wide JavaScript to this file, but it's generally better 
 // to create separate JavaScript files as needed.
 //
+//= require angular-1.5.1.bower.js
 //= require jquery
 //= require_self
 
