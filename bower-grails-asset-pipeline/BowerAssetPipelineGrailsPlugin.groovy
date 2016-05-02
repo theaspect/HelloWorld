@@ -1,3 +1,6 @@
+import asset.pipeline.AssetPipelineConfigHolder
+import asset.pipeline.bower.BowerAssetResolver
+
 class BowerAssetPipelineGrailsPlugin {
     def version = "0.1"
     def grailsVersion = "2.2 > *"
@@ -11,4 +14,8 @@ class BowerAssetPipelineGrailsPlugin {
     def organization = [ name: "Bertram Capital", url: "http://www.bertramcapital.com/" ]
     def issueManagement = [ system: "GITHUB", url: "http://github.com/bertramdev/coffee-grails-asset-pipeline/issues" ]
     def scm = [ url: "http://github.com/bertramdev/coffee-grails-asset-pipeline" ]
+
+    def doWithApplicationContext = { ctx ->
+        AssetPipelineConfigHolder.registerResolver(new BowerAssetResolver())
+    }
 }

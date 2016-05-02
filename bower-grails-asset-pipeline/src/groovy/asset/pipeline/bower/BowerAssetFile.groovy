@@ -25,8 +25,8 @@ import java.util.regex.Pattern
 */
 class BowerAssetFile extends AbstractAssetFile {
 	static final contentType = ['application/javascript','application/x-javascript','text/javascript']
-	static extensions = ['bower']
-	static final String compiledExtension = 'js'
-	static processors = [BowerScriptProcessor]
+	static extensions = ['bower.js']
+	static final String compiledExtension = 'bower.js'
+	static processors = []
 	Pattern directivePattern = ~/(?m)#=(.*)/
 }
