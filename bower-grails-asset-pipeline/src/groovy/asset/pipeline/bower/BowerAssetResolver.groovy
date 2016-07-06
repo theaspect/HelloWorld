@@ -18,10 +18,20 @@ class BowerAssetResolver implements AssetResolver {
     @Override
     AssetFile getAsset(String relativePath, String contentType, String extension, AssetFile baseFile) {
         if (relativePath.endsWith(".bower.js")) {
+            File relative = new File(relativePath)
+            def parseFileName = new ArrayList()
+            (parseFileName = relative.getName().replace(".bower.js", "").split("-")) as AssetFile
+            //println(parseFileName)
             return new BowerAssetFile(
-                    path: relativePath.split("//.")[0],
+                    path: relativePath,// парс
                     inputStreamSource: {
-                        return new ByteArrayInputStream("Woo-Hoo".bytes)
+                        if(parseFileName.size() == 1){
+                            return new ByteArrayInputStream(BowerDownload.work("-url ${parseFileName[0].toString()}".split(" ")) as byte)
+                        }
+                        else{
+                            return new ByteArrayInputStream(BowerDownload.work("-url ${parseFileName[0]} -version ${parseFileName[1]}".split(" ")) as byte)
+                        }
+
                     })
         } else {
             return null

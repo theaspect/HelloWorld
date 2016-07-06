@@ -21,7 +21,7 @@ import spock.lang.Specification
 /**
 **/
 class BowerScriptProcessorSpec extends Specification {
-	void "should compile bowerscript into js using rhino"() {
+	/*void "should compile bowerscript into js using rhino"() {
 		given:
 			def bowerScript = '''
 				log = ->
@@ -48,5 +48,5 @@ class BowerScriptProcessorSpec extends Specification {
 			def output = processor.process(bowerScript, null)
 		then:
 			output.contains('console.log("hello world");')
-	}
+	}*/
 }

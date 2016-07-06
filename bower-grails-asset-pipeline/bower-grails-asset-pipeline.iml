@@ -49,13 +49,6 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/groovy" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/unit" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/test/integration" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/grails-app/utils" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/grails-app/controllers" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/grails-app/domain" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/grails-app/services" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/grails-app/taglib" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/work/resources" />
@@ -71,9 +64,7 @@
     <orderEntry type="module-library">
       <library name="Grails User Library (bower-grails-asset-pipeline)">
         <CLASSES>
-          <root url="file://$MODULE_DIR$/lib" />
           <root url="jar://$MAVEN_REPOSITORY$/com/bertramlabs/plugins/asset-pipeline-core/2.7.2/asset-pipeline-core-2.7.2.jar!/" />
-          <root url="jar://$MAVEN_REPOSITORY$/com/bertramlabs/plugins/coffee-asset-pipeline/2.7.2/coffee-asset-pipeline-2.7.2.jar!/" />
           <root url="jar://D:/grails-2.4.5/lib/org.grails/grails-datastore-simple/jars/grails-datastore-simple-3.1.4.RELEASE.jar!/" />
           <root url="jar://D:/grails-2.4.5/lib/org.grails/grails-datastore-gorm/jars/grails-datastore-gorm-3.1.4.RELEASE.jar!/" />
           <root url="jar://D:/grails-2.4.5/lib/org.grails/grails-datastore-core/jars/grails-datastore-core-3.1.4.RELEASE.jar!/" />
@@ -226,13 +217,17 @@
           <root url="jar://D:/grails-2.4.5/lib/net.java.dev.jna/jna/jars/jna-4.0.0.jar!/" />
           <root url="jar://D:/grails-2.4.5/lib/org.apache.ant/ant-junit/jars/ant-junit-1.8.4.jar!/" />
           <root url="jar://D:/grails-2.4.5/lib/org.apache.ant/ant-trax/jars/ant-trax-1.7.1.jar!/" />
+          <root url="jar://D:/grails-2.4.5/lib/org.codehaus.jsr166-mirror/jsr166y/jars/jsr166y-1.7.0.jar!/" />
+          <root url="jar://D:/grails-2.4.5/lib/org.codehaus.gpars/gpars/jars/gpars-1.2.1.jar!/" />
+          <root url="jar://D:/grails-2.4.5/lib/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar!/" />
+          <root url="jar://D:/grails-2.4.5/lib/org.fusesource.jansi/jansi/jars/jansi-1.11.jar!/" />
+          <root url="jar://D:/grails-2.4.5/lib/jline/jline/jars/jline-2.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
           <root url="jar://$USER_HOME$/.ideaLibSources/asset-pipeline-core-2.7.2-sources.jar!/" />
           <root url="jar://$USER_HOME$/.ideaLibSources/groovy-all-2.3.11-sources.jar!/" />
         </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
   </component>
