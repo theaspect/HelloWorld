@@ -10,7 +10,7 @@ class BowerDownload {
     Logger logger = LogManager.getLogger(BowerDownload.class);
 
     def parseData
-    def urlList
+    def urlList = new ArrayList<Item>()
     String gitHubUserContent
     String fileName
     String dirFile
@@ -30,7 +30,6 @@ class BowerDownload {
     BowerDownload() {
 
         this.parseData = null
-        this.urlList = new ArrayList<Item>()
         this.gitHubUserContent = "https://raw.githubusercontent.com"
         this.fileName = "bower.json"
         this.startUrl = "https://bower.herokuapp.com/packages/lookup/"
