@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 @Component
 class BowerDownloadService {
 
-    private static final log = LogFactory.getLog(this);
+    private static final log = LogFactory.getLog(BowerDownloadService);
     public static final String DEFAULT_VERSION = "master"
     public static final String FILE_EXTENSION = ".bower.js"
     private final String dirFile
@@ -41,7 +41,7 @@ class BowerDownloadService {
     /**
      * по имени библиотеки и версии получить имя файла
      */
-    String necessaryFileName(String fileName, String version){ // пара тестов
+    String necessaryFileName(String fileName, String version){
         if (version != DEFAULT_VERSION) {
             fileName = fileName + "-" + version + FILE_EXTENSION
         } else {
@@ -68,11 +68,16 @@ class BowerDownloadService {
     /**
      * Преобразование бовер ссылки на гит
      */
-    String getGitUrl(String version, String text) { // тест с версией и без
-        //если более 1 ссылки, экзепшен
-        URL aURL = new URL(parseText(text).first().url)
-        String gitUrl = GIT_HUB_USER_CONTENT + aURL.getPath().replaceAll("\\.git", "") + "/" + version
-        return gitUrl
+    String getGitUrl(String version, String text) {
+        List<Item> urlList = parseText(text)
+        if(urlList.size() > 1){
+            throw new Exception()
+        } else {
+            URL aURL = new URL(urlList.first().url)
+            String gitUrl = GIT_HUB_USER_CONTENT + aURL.getPath().replaceAll("\\.git", "") + "/" + version
+            return gitUrl
+        }
+
     }
 
     List<Item> parseText(String text) {
@@ -106,7 +111,7 @@ class BowerDownloadService {
      * Parse Bower Response
      */
 
-    String getLibraryName(String text) { //пара тестов с версией и без
+    String getLibraryName(String text) {
         def parseData = new JsonSlurper().parseText(text)
         String fileName = parseData.main.replaceAll("\\./", "")
         return fileName
