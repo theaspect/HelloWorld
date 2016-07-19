@@ -2,13 +2,13 @@ package asset.pipeline.bower
 
 import asset.pipeline.AssetFile
 import asset.pipeline.fs.AssetResolver
+import grails.util.Holders
 import org.springframework.stereotype.Component
-
-import java.nio.file.Files
-import java.nio.file.Paths
 
 @Component
 class BowerAssetResolver implements AssetResolver {
+
+    def bowerDownloadService = new BowerDownloadService(Holders.config.grails.assets.bowerjs ?: "target/bowerjs/")
 
     @Override
     String getName() {
@@ -19,36 +19,19 @@ class BowerAssetResolver implements AssetResolver {
      */
     @Override
     AssetFile getAsset(String relativePath, String contentType, String extension, AssetFile baseFile) {
-        boolean isFile = false
-        BowerDownload bowerDownload = new BowerDownload()
         if (relativePath.endsWith(".bower.js")) {
+
             File relative = new File(relativePath)
-            def parseFileName = new ArrayList()
-            def path = bowerDownload.dirFile
-            (parseFileName = relative.getName().replace(".bower.js", "").split("-")) as AssetFile
-
-            Files.walk(Paths.get(path.toString())).each {
-                if (!Files.isDirectory(it) && (it.getFileName().toString() == relative.getName().toString())) {
-                    isFile = true
-                }
-            }
-
-            if (!isFile) {
-                isFile = true
-                return new BowerAssetFile(
-                        path: relativePath,
-                        inputStreamSource: {
-                            if (parseFileName.size() == 1) {
-                                return new ByteArrayInputStream(bowerDownload.work("-url ${parseFileName[0].toString()}".split(" ")) as byte)
-                            } else {
-                                return new ByteArrayInputStream(bowerDownload.work("-url ${parseFileName[0]} -version ${parseFileName[1]}".split(" ")) as byte)
-                            }
-
-                        })
-
-            } else {
-                return null
-            }
+            def parseFileName = relative.getName().replace(".bower.js", "").split("-")
+            return new BowerAssetFile(
+                    path: relativePath,
+                    inputStreamSource: {
+                        if (parseFileName.size() == 1) {
+                            return bowerDownloadService.getLibrary(parseFileName[0], "master")
+                        } else{
+                            return bowerDownloadService.getLibrary(parseFileName[0], parseFileName[1])
+                        }
+                    })
 
         } else {
             return null
