@@ -6,6 +6,7 @@
 // to create separate JavaScript files as needed.
 //
 //= require angular-v1.5.3.bower.js
+//= require underscore.bower.js
 //= require jquery
 //= require_self
 
