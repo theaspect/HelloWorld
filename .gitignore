@@ -24,14 +24,11 @@ gradle-app.setting
 target/
 bower-grails-asset-pipeline/.idea/
 bower-grails-asset-pipeline/wrapper/
-bower-grails-asset-pipeline/web-app/
 bower-grails-asset-pipeline/target/
 demo/.slcache/
-demo/web-app/
 demo/wrapper/
 .idea/
 out
 *.iml
 *.ipr
 *.iws
-*.xml
