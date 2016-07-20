@@ -72,6 +72,6 @@ class BowerAssetResolver implements AssetResolver {
 
     @Override
     Collection<AssetFile> scanForFiles(List<String> excludePatterns, List<String> includePatterns) {
-        return null
+        return []
     }
 }
