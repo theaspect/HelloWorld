@@ -2,6 +2,7 @@ Bower Grails Asset pipeline
 ===========================
 
 The bower-grails-asset-pipeline plugin allow you load javascript libraries directly from bower.
+You required to install [asset-pipeline](https://github.com/bertramdev/asset-pipeline) plugin.
 
 For more information on how to use asset-pipeline, visit [repo](https://github.com/theaspect/bower-grails-asset-pipeline).
 You can search libraries in bower repository [bower](https://bower.io/search).
