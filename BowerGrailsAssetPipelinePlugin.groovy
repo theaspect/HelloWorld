@@ -1,7 +1,7 @@
 import asset.pipeline.AssetPipelineConfigHolder
 import asset.pipeline.bower.BowerAssetResolver
 
-class BowerAssetPipelineGrailsPlugin {
+class BowerGrailsAssetPipelinePlugin {
     def version = "0.1"
     def grailsVersion = "2.4 > *"
     def title = "Bower Asset-Pipeline Plugin"
