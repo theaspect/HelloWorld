@@ -2,10 +2,8 @@ package asset.pipeline.bower
 
 import groovy.json.JsonSlurper
 import org.apache.commons.logging.LogFactory
-import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
-@Component
 class BowerDownloadService {
 
     private static final log = LogFactory.getLog(BowerDownloadService);
