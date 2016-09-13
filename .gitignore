@@ -29,6 +29,9 @@ demo/.slcache/
 demo/wrapper/
 .idea/
 out
+web-app/
+plugin.xml
 *.iml
 *.ipr
 *.iws
+grails-bower-asset-pipeline-*.zip
