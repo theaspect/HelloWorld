@@ -3,14 +3,19 @@ package asset.pipeline.bower
 import groovy.json.JsonSlurper
 import org.apache.commons.logging.LogFactory
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
+import java.util.function.Consumer
+import java.util.function.Predicate
 
 class BowerDownloadService {
 
     private static final log = LogFactory.getLog(BowerDownloadService)
     public static final String DEFAULT_VERSION = "master"
     public static final String FILE_EXTENSION = ".bower.js"
-    private final String dirFile
+    public final String dirFile // target/bower/
     private static final String GIT_HUB_USER_CONTENT = "https://raw.githubusercontent.com"
     private static final String FILE_NAME = "bower.json"
     private static final String START_URL = "https://bower.herokuapp.com/packages/lookup/"
@@ -21,20 +26,39 @@ class BowerDownloadService {
         this.dirFile = dirFile
     }
 
-    InputStream getLibrary(String libName, String version) {
+    Map<String, InputStream> getFiles(String libName, String version) {
         //проверка существования пути
         File isDir = new File(this.dirFile)
         isDir.mkdirs()
 
         String fileName = necessaryFileName(libName, version)
+        Map<String, InputStream> files = [:]
 
         //verification of the file on existence, not emptiness and prescription
         if (!(isFileActual(new File(this.dirFile, fileName), version))) {
             String gitHubUserContent = getGitUrl(version, downloadUrl(START_URL + libName))
-            String libraryName = getLibraryName(downloadUrl(gitHubUserContent + '/' + FILE_NAME))
-            writeUrlToFile(gitHubUserContent + '/' + libraryName, new File(dirFile, fileName))
+            List<String> libraryNames = getLibraryName(downloadUrl(gitHubUserContent + '/' + FILE_NAME))
+            for (String lib : libraryNames) {
+                def f = new File(dirFile, "$fileName/$lib")
+                f.getParentFile().mkdirs()
+                writeUrlToFile(gitHubUserContent + '/' + lib, f)
+                files["$fileName/$lib"] = new FileInputStream(f)
+            }
+        } else {
+            // groovy isn't friendly with java8
+            Files.walk(Paths.get(this.dirFile, fileName)).filter(new Predicate<Path>() {
+                @Override
+                boolean test(Path path) {
+                    Files.isRegularFile(path) && path.toString().endsWith(".js")
+                }
+            }).forEach(new Consumer<Path>() {
+                @Override
+                void accept(Path path) {
+                    files[path.toString().substring(dirFile.length())] = new FileInputStream(path.toFile())
+                }
+            })
         }
-        return new FileInputStream(new File(this.dirFile, fileName))
+        return files
     }
 
     /**
@@ -42,9 +66,9 @@ class BowerDownloadService {
      */
     static String necessaryFileName(String fileName, String version) {
         if (version != DEFAULT_VERSION) {
-            fileName = fileName + "-" + version + FILE_EXTENSION
+            fileName = "$fileName-$version"
         } else {
-            fileName = fileName + FILE_EXTENSION
+            fileName = "$fileName-master"
         }
         return fileName
     }
@@ -59,7 +83,7 @@ class BowerDownloadService {
             if ((file.length() == 0) || ((hours > LIFE_TIME_CACHE_IN_HOURS) && (version == DEFAULT_VERSION))) {
                 fileExists = false
             }
-            log.error("File ${file.getName()} exists, it isn't empty and not old")
+            log.debug("File ${file.getName()} exists, it isn't empty and not old")
         }
         return fileExists
     }
@@ -110,21 +134,22 @@ class BowerDownloadService {
      * Parse Bower Response
      */
 
-    static String getLibraryName(String text) {
+    static List<String> getLibraryName(String text) {
         def parseData = new JsonSlurper().parseText(text)
-        String fileName
+        List<String> fileNames
         switch (parseData.main) {
-            case List:
-                // Take first js file
-                fileName = parseData.main.find { it.endsWith(".js") }.replaceAll("\\./", "")
-                break
             case String:
-                fileName = parseData.main.replaceAll("\\./", "")
+                // Single js
+                fileNames = [parseData.main.replaceAll("\\./", "")] as List<String>
+                break
+            case Collection:
+                fileNames = parseData.main.findAll { it.endsWith(".js") }.collect { it.replaceAll("\\./", "") }
                 break
             default:
-                throw new IllegalArgumentException("Unknown type ${parseData.main}")
+                throw new IllegalStateException("Unknown type ${parseData.main}")
         }
-        return fileName
+
+        return fileNames
     }
 
     static void writeUrlToFile(String url, File file) {
