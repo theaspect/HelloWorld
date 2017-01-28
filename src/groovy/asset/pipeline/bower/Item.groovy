@@ -9,7 +9,7 @@ class Item {
         this.url = url
     }
 
-    def String toString(){
+    String toString() {
         return "Name: " + this.name + " " + "Url: " + this.url +  " "
     }
 }

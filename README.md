@@ -13,16 +13,18 @@ Usage
 Add this plugin to `BuildConfig.groovy`:
 
 ```groovy
-compile ":asset-pipeline:2.1.5"
-compile ":bower-asset-pipeline:0.2"
+compile ":asset-pipeline:2.7.2"
+compile ":bower-asset-pipeline:0.3"
 ```
 
 In any javascript asset you can specify library with version or latest available from repo.
 Just add bower.js and it will be looked-up in bower repository:
 
 ```javascript
-//= require angular-v1.5.3.bower.js
-//= require underscore.bower.js
+//= require jquery
+//= require datatables.bower.js
+//= require underscore-1.8.3.bower.js
 ```
 
 *NOTE:* If you do not specify version, it will download latest version every day. Version should be exactly the same as in git-repo tag.
+*NOTE:* In case of multiple js files, css'es and other assets only first js will be downloaded
