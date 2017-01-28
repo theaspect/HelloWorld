@@ -14,7 +14,6 @@ class BowerDownloadService {
 
     private static final log = LogFactory.getLog(BowerDownloadService)
     public static final String DEFAULT_VERSION = "master"
-    public static final String FILE_EXTENSION = ".bower.js"
     public final String dirFile // target/bower/
     private static final String GIT_HUB_USER_CONTENT = "https://raw.githubusercontent.com"
     private static final String FILE_NAME = "bower.json"
@@ -26,38 +25,38 @@ class BowerDownloadService {
         this.dirFile = dirFile
     }
 
-    Map<String, InputStream> getFiles(String libName, String version) {
+    Map<String, InputStream> getFiles(String libName, String version, String extension) {
         //проверка существования пути
         File isDir = new File(this.dirFile)
         isDir.mkdirs()
 
         String fileName = necessaryFileName(libName, version)
-        Map<String, InputStream> files = [:]
 
         //verification of the file on existence, not emptiness and prescription
         if (!(isFileActual(new File(this.dirFile, fileName), version))) {
             String gitHubUserContent = getGitUrl(version, downloadUrl(START_URL + libName))
-            List<String> libraryNames = getLibraryName(downloadUrl(gitHubUserContent + '/' + FILE_NAME))
+            List<String> libraryNames = getAssetNames(downloadUrl(gitHubUserContent + '/' + FILE_NAME))
             for (String lib : libraryNames) {
                 def f = new File(dirFile, "$fileName/$lib")
                 f.getParentFile().mkdirs()
                 writeUrlToFile(gitHubUserContent + '/' + lib, f)
-                files["$fileName/$lib"] = new FileInputStream(f)
             }
-        } else {
-            // groovy isn't friendly with java8
-            Files.walk(Paths.get(this.dirFile, fileName)).filter(new Predicate<Path>() {
-                @Override
-                boolean test(Path path) {
-                    Files.isRegularFile(path) && path.toString().endsWith(".js")
-                }
-            }).forEach(new Consumer<Path>() {
-                @Override
-                void accept(Path path) {
-                    files[path.toString().substring(dirFile.length())] = new FileInputStream(path.toFile())
-                }
-            })
         }
+
+        // groovy isn't friendly with java8
+        Map<String, InputStream> files = [:]
+        Files.walk(Paths.get(this.dirFile, fileName)).filter(new Predicate<Path>() {
+            @Override
+            boolean test(Path path) {
+                Files.isRegularFile(path) && path.toString().endsWith(".$extension")
+            }
+        }).forEach(new Consumer<Path>() {
+            @Override
+            void accept(Path path) {
+                files[path.toString().substring(dirFile.length())] = new FileInputStream(path.toFile())
+            }
+        })
+
         return files
     }
 
@@ -134,7 +133,7 @@ class BowerDownloadService {
      * Parse Bower Response
      */
 
-    static List<String> getLibraryName(String text) {
+    static List<String> getAssetNames(String text) {
         def parseData = new JsonSlurper().parseText(text)
         List<String> fileNames
         switch (parseData.main) {
@@ -143,7 +142,7 @@ class BowerDownloadService {
                 fileNames = [parseData.main.replaceAll("\\./", "")] as List<String>
                 break
             case Collection:
-                fileNames = parseData.main.findAll { it.endsWith(".js") }.collect { it.replaceAll("\\./", "") }
+                fileNames = parseData.main.collect { it.replaceAll("\\./", "") }
                 break
             default:
                 throw new IllegalStateException("Unknown type ${parseData.main}")

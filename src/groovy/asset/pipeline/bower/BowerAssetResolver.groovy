@@ -46,8 +46,17 @@ class BowerAssetResolver implements AssetResolver {
             String lib = parseFileName[0]
             String version = parseFileName.size() == 1 ? 'master' : parseFileName[1]
 
-            return bowerDownloadService.getFiles(lib, version).collect { name, stream ->
-                new BowerAssetFile(path: name.replaceAll('.js$',''), inputStreamSource: { return stream })
+            return bowerDownloadService.getFiles(lib, version, 'js').collect { name, stream ->
+                new BowerJsAssetFile(path: name.replaceAll('.js$', ''), inputStreamSource: { return stream })
+            }
+        } else if (basePath.endsWith(".bower.css")) {
+            File relative = new File(basePath)
+            String[] parseFileName = relative.getName().replace(".bower.css", "").split("-")
+            String lib = parseFileName[0]
+            String version = parseFileName.size() == 1 ? 'master' : parseFileName[1]
+
+            return bowerDownloadService.getFiles(lib, version, 'css').collect { name, stream ->
+                new BowerCssAssetFile(path: name.replaceAll('.css$', ''), inputStreamSource: { return stream })
             }
         } else {
             return null

@@ -20,7 +20,7 @@ class BowerAssetResolverTest {
 
     @Test
     void getLibraryName(){
-        assertEquals(bowerDownloadService.getLibraryName("{\n" +
+        assertEquals(bowerDownloadService.getAssetNames("{\n" +
                 "  \"name\": \"angular\",\n" +
                 "  \"version\": \"1.5.3\",\n" +
                 "  \"license\": \"MIT\",\n" +

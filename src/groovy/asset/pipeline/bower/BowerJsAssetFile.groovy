@@ -23,7 +23,7 @@ import java.util.regex.Pattern
 /**
 * Specification for the Bower file extension which compiles into javascript
 */
-class BowerAssetFile extends AbstractAssetFile {
+class BowerJsAssetFile extends AbstractAssetFile {
 	static final contentType = ['application/javascript','application/x-javascript','text/javascript']
 	static extensions = ['bower.js']
 	static final String compiledExtension = 'js'
