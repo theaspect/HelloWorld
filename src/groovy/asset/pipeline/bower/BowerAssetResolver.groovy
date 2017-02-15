@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component
 @Component
 class BowerAssetResolver implements AssetResolver {
 
+    public static final String BOWER_JS = ".bower.js"
+    public static final String BOWER_CSS = ".bower.css"
     def bowerDownloadService = new BowerDownloadService(Holders.config.grails.assets.bowerjs ?: "target/bower/")
 
     @Override
@@ -20,13 +22,40 @@ class BowerAssetResolver implements AssetResolver {
      */
     @Override
     AssetFile getAsset(String relativePath, String contentType, String extension, AssetFile baseFile) {
-        File f = new File(bowerDownloadService.dirFile, relativePath)
-        if (f.exists()) {
-            return new GenericAssetFile(path: f.getPath(), inputStreamSource: { return new FileInputStream(f) })
+        if (relativePath.endsWith(BOWER_CSS)) {
+            String lib = getLibrary(relativePath, BOWER_CSS)
+            String version = getVersion(relativePath, BOWER_CSS)
+            bowerDownloadService.downloadIfNeeded(lib, version)
+            scanForFiles([], []).find { it instanceof BowerCssAssetFile && it.path.startsWith("$lib-$version") }
+        } else if (relativePath.endsWith(BOWER_JS)) {
+            String lib = getLibrary(relativePath, BOWER_JS)
+            String version = getVersion(relativePath, BOWER_JS)
+            bowerDownloadService.downloadIfNeeded(lib, version)
+            scanForFiles([], []).find { it instanceof BowerJsAssetFile && it.path.startsWith("$lib-$version") }
         } else {
-            return null
+            File f = new File(bowerDownloadService.dirFile, relativePath)
+            if (f.exists()) {
+                return new GenericAssetFile(path: f.getPath(), inputStreamSource: { return new FileInputStream(f) })
+            } else {
+                return null
+            }
         }
     }
+
+    static String getLibrary(String path, String suffix) {
+        def arr = path.substring("null/".length(), path.size() - suffix.length()).split("-")
+        arr[0]
+    }
+
+    static String getVersion(String path, String suffix) {
+        def arr = path.substring("null/".length(), path.size() - suffix.length()).split("-")
+        if (arr.size() > 1) {
+            arr[1]
+        } else {
+            "master"
+        }
+    }
+
 
     @Override
     AssetFile getAsset(String relativePath, String contentType) {
@@ -35,28 +64,37 @@ class BowerAssetResolver implements AssetResolver {
 
     @Override
     AssetFile getAsset(String relativePath) {
-        return null
+        File f = new File(bowerDownloadService.dirFile, relativePath)
+        if (f.exists()) {
+            return new GenericAssetFile(path: relativePath, inputStreamSource: { return new FileInputStream(f) })
+        } else {
+            return null
+        }
     }
 
     @Override
     List<AssetFile> getAssets(String basePath, String contentType, String extension, Boolean recursive, AssetFile relativeFile, AssetFile baseFile) {
-        if (basePath.endsWith(".bower.js")) {
+        if (basePath.endsWith(BOWER_JS)) {
             File relative = new File(basePath)
-            String[] parseFileName = relative.getName().replace(".bower.js", "").split("-")
+            String[] parseFileName = relative.getName().replace(BOWER_JS, "").split("-")
             String lib = parseFileName[0]
             String version = parseFileName.size() == 1 ? 'master' : parseFileName[1]
 
-            return bowerDownloadService.getFiles(lib, version, 'js').collect { name, stream ->
-                new BowerJsAssetFile(path: name.replaceAll('.js$', ''), inputStreamSource: { return stream })
+            return bowerDownloadService.getFiles(lib, version, 'js').collect { name, path ->
+                new BowerJsAssetFile(path: name.replaceAll('.js$', ''), inputStreamSource: {
+                    return new FileInputStream(path.toFile())
+                })
             }
-        } else if (basePath.endsWith(".bower.css")) {
+        } else if (basePath.endsWith(BOWER_CSS)) {
             File relative = new File(basePath)
-            String[] parseFileName = relative.getName().replace(".bower.css", "").split("-")
+            String[] parseFileName = relative.getName().replace(BOWER_CSS, "").split("-")
             String lib = parseFileName[0]
             String version = parseFileName.size() == 1 ? 'master' : parseFileName[1]
 
-            return bowerDownloadService.getFiles(lib, version, 'css').collect { name, stream ->
-                new BowerCssAssetFile(path: name.replaceAll('.css$', ''), inputStreamSource: { return stream })
+            return bowerDownloadService.getFiles(lib, version, 'css').collect { name, path ->
+                new BowerCssAssetFile(path: name.replaceAll('.css$', ''), inputStreamSource: {
+                    return new FileInputStream(path.toFile())
+                })
             }
         } else {
             return null
@@ -80,6 +118,18 @@ class BowerAssetResolver implements AssetResolver {
 
     @Override
     Collection<AssetFile> scanForFiles(List<String> excludePatterns, List<String> includePatterns) {
-        return []
+        return bowerDownloadService.getAllAssets('').collect { name, path ->
+            if (name.endsWith(".js")) {
+                new BowerJsAssetFile(path: name.replaceAll('.js$', ''), inputStreamSource: {
+                    return new FileInputStream(path.toFile())
+                })
+            } else if (name.endsWith(".css")) {
+                new BowerCssAssetFile(path: name.replaceAll('.css$', ''), inputStreamSource: {
+                    return new FileInputStream(path.toFile())
+                })
+            } else {
+                new GenericAssetFile(path: name, inputStreamSource: { return new FileInputStream(path.toFile()) })
+            }
+        }
     }
 }

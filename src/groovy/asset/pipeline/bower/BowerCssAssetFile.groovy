@@ -18,10 +18,8 @@ package asset.pipeline.bower
 
 import asset.pipeline.AbstractAssetFile
 import asset.pipeline.Processor
-import asset.pipeline.processors.CssProcessor
 
 import java.util.regex.Pattern
-
 /**
 * Specification for the Bower file extension which compiles into javascript
 */
@@ -29,6 +27,6 @@ class BowerCssAssetFile extends AbstractAssetFile {
 	static final contentType = ['text/css']
 	static extensions = ['bower.css']
 	static final String compiledExtension = 'css'
-	static List<Class<Processor>> processors = [CssProcessor]
+	static List<Class<Processor>> processors = [BowerCssProcessor]
 	Pattern directivePattern = ~/(?m)\*=(.*)/
 }

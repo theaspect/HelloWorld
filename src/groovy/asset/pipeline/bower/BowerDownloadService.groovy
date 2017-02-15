@@ -25,7 +25,15 @@ class BowerDownloadService {
         this.dirFile = dirFile
     }
 
-    Map<String, InputStream> getFiles(String libName, String version, String extension) {
+    Map<String, Path> getFiles(String libName, String version, String extension = null) {
+        String fileName = downloadIfNeeded(libName, version)
+
+        LinkedHashMap<String, Path> files = getAllAssets(fileName, extension)
+
+        return files
+    }
+
+    String downloadIfNeeded(String libName, String version) {
         //проверка существования пути
         File isDir = new File(this.dirFile)
         isDir.mkdirs()
@@ -42,22 +50,26 @@ class BowerDownloadService {
                 writeUrlToFile(gitHubUserContent + '/' + lib, f)
             }
         }
+        fileName
+    }
 
+    LinkedHashMap<String, Path> getAllAssets(String fileName, extension = null) {
         // groovy isn't friendly with java8
-        Map<String, InputStream> files = [:]
-        Files.walk(Paths.get(this.dirFile, fileName)).filter(new Predicate<Path>() {
-            @Override
-            boolean test(Path path) {
-                Files.isRegularFile(path) && path.toString().endsWith(".$extension")
-            }
-        }).forEach(new Consumer<Path>() {
-            @Override
-            void accept(Path path) {
-                files[path.toString().substring(dirFile.length())] = new FileInputStream(path.toFile())
-            }
-        })
-
-        return files
+        Map<String, Path> files = [:]
+        if (Files.exists(Paths.get(this.dirFile, fileName))) {
+            Files.walk(Paths.get(this.dirFile, fileName)).filter(new Predicate<Path>() {
+                @Override
+                boolean test(Path path) {
+                    Files.isRegularFile(path) && ((extension == null) || path.toString().endsWith(".$extension"))
+                }
+            }).forEach(new Consumer<Path>() {
+                @Override
+                void accept(Path path) {
+                    files[path.toString().substring(dirFile.length())] = path
+                }
+            })
+        }
+        files
     }
 
     /**
