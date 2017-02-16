@@ -25,12 +25,23 @@ class BowerDownloadService {
         this.dirFile = dirFile
     }
 
-    Map<String, Path> getFiles(String libName, String version, String extension = null) {
-        String fileName = downloadIfNeeded(libName, version)
+    Map<String, Path> getFiles(String lib, String extension = null) {
+        String fileName = downloadIfNeeded(lib)
 
         LinkedHashMap<String, Path> files = getAllAssets(fileName, extension)
 
         return files
+    }
+
+    String downloadIfNeeded(String lib) {
+        String[] tokens = lib.split("-", 2)
+        String libName = tokens[0]
+        String version = "master"
+        if (tokens.size() > 1) {
+            version = tokens[1]
+        }
+
+        downloadIfNeeded(libName, version)
     }
 
     String downloadIfNeeded(String libName, String version) {
